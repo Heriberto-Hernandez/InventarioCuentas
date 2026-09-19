@@ -49,6 +49,10 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 async def normalize_vercel_api_path(request, call_next):
     path = request.scope["path"]
     api_prefixes = ("/auth", "/cuentas", "/inventario", "/rarezas", "/health")
+    if path.startswith("/api/index.py/"):
+        path = path[len("/api/index.py"):]
+        request.scope["path"] = "/api" + path
+        return await call_next(request)
     if not path.startswith("/api/") and any(
         path == prefix or path.startswith(prefix + "/") for prefix in api_prefixes
     ):
