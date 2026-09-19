@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brainrot Manager</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <section class="login-vista" id="loginVista">
+    <div class="login-panel">
+      <span class="login-marca">BRAINROT MANAGER</span>
+      <h1>Tu inventario, en orden.</h1>
+      <p class="subtitulo">Gestiona todas tus cuentas y criaturas desde un solo lugar.</p>
+      <div id="googleButton" class="google-button"></div>
+      <button class="btn-local" id="btnLoginLocal">Entrar en modo desarrollo</button>
+      <p class="login-nota">Google se activa al configurar el Client ID de GIS.</p>
+    </div>
+  </section>
+
+  <div id="appVista" class="app-vista oculta">
+
+  <!-- Barra Superior -->
+  <header>
+    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="buscador-container">
+      <input type="text" id="buscadorInput" placeholder="Buscar criatura, mutación o cuenta...">
+    </div>
+
+    <div class="usuario-perfil">
+      <div class="avatar-mini">U</div>
+      <span id="labelUsuario">@MiUsuario</span>
+      <button class="btn-logout" id="btnCerrarSesion" type="button">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <!-- Menú Hamburguesa Lateral -->
+  <nav class="sidebar-menu" id="sidebarMenu">
+    <a href="#" id="linkInicio">📦 Dashboard</a>
+    <a href="#" id="linkCatalogo">📖 Catálogo Global</a>
+    <a href="#" id="linkStats">💰 Estadísticas</a>
+    <a href="#" id="linkConfig">⚙️ Configuración</a>
+  </nav>
+
+  <!-- Contenedor Principal -->
+  <main>
+    <div class="header-secciones">
+      <div>
+        <h2>Mis Cuentas</h2>
+        <p class="subtitulo">Monitorea la ubicación y espacio de tus brainrots</p>
+      </div>
+      <button class="btn-primary" id="btnAgregarCuenta">+ Agregar Cuenta</button>
+    </div>
+
+    <!-- Lista de Cuentas (Scrolls) -->
+    <div id="contenedorCuentas" class="contenedor-cuentas">
+      <!-- Se inyecta dinámicamente con app.js -->
+    </div>
+  </main>
+
+  <!-- Modal / Pantalla de Cuadrícula -->
+  <div class="modal-overlay" id="modalCuadricula">
+    <div class="modal-contenido">
+      <div class="modal-top">
+        <div>
+          <h2 id="modalTituloCuenta">Inventario: @Cuenta</h2>
+          <span id="modalSubtituloCuenta" class="subtitulo">Capacidad ocupada</span>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary btn-small" id="btnAgregarBrainrot" type="button">+ Brainrot</button>
+          <button class="btn-cerrar" id="btnCerrarModal" type="button">&times;</button>
+        </div>
+      </div>
+
+      <div class="grid-brainrots" id="gridContenedor">
+        <!-- Tarjetas en cuadrícula inyectadas con app.js -->
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalAgregarCuenta">
+    <div class="modal-contenido modal-cuenta-form">
+      <div class="modal-top">
+        <h2>Agregar cuenta</h2>
+        <button class="btn-cerrar" id="btnCerrarAgregarCuenta" type="button">&times;</button>
+      </div>
+      <form id="formAgregarCuenta">
+        <label for="nombreCuentaInput">Nombre de usuario</label>
+        <input id="nombreCuentaInput" name="user_cuenta" type="text" maxlength="80" required autocomplete="off">
+        <label for="espacioCuentaInput">Espacios disponibles</label>
+        <input id="espacioCuentaInput" name="espacio_maximo" type="number" min="1" value="12" required>
+        <p class="form-error" id="errorAgregarCuenta"></p>
+        <div class="form-actions">
+          <button class="btn-secondary" id="btnCancelarAgregarCuenta" type="button">Cancelar</button>
+          <button class="btn-primary" id="btnGuardarCuenta" type="submit">Guardar cuenta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalAgregarBrainrot">
+    <div class="modal-contenido modal-cuenta-form">
+      <div class="modal-top">
+        <h2 id="tituloFormularioBrainrot">Agregar brainrot</h2>
+        <button class="btn-cerrar" id="btnCerrarAgregarBrainrot" type="button">&times;</button>
+      </div>
+      <form id="formAgregarBrainrot">
+        <label for="nombreBrainrotInput">Nombre</label>
+        <input id="nombreBrainrotInput" name="nombre" type="text" maxlength="80" required autocomplete="off">
+        <label for="rarezaBrainrotInput">Rareza</label>
+        <select id="rarezaBrainrotInput" name="rareza" required></select>
+        <label for="iconoBrainrotInput">Icono</label>
+        <input id="iconoBrainrotInput" name="icono" type="text" value="👾" maxlength="4">
+        <label for="mutacionBrainrotInput">Mutación</label>
+        <input id="mutacionBrainrotInput" name="mutacion" type="text" value="Normal">
+        <label for="dineroBrainrotInput">Generación por segundo</label>
+        <input id="dineroBrainrotInput" name="generacion_dinero" type="number" min="0" value="100" required>
+        <p class="form-error" id="errorAgregarBrainrot"></p>
+        <div class="form-actions">
+          <button class="btn-secondary" id="btnCancelarAgregarBrainrot" type="button">Cancelar</button>
+          <button class="btn-primary" id="btnGuardarBrainrot" type="submit">Guardar brainrot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  </div>
+  <script>
+    window.GOOGLE_CLIENT_ID = "683770941063-ju75ol2ing22hpm93v9k3sbttsdb4b6i.apps.googleusercontent.com";
+  </script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
