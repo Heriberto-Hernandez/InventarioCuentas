@@ -210,6 +210,39 @@ def create_account(payload: CuentaPayload, user: Usuario = Depends(get_current_u
     return account_response(account)
 
 
+@app.put("/api/cuentas/{account_id}")
+def edit_account(account_id: int, payload: CuentaPayload,
+                 user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
+    account = db.query(Cuenta).filter(Cuenta.id_cuenta == account_id,
+                                      Cuenta.id_usuario == user.id_usuario).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="Cuenta no encontrada")
+    if payload.espacio_maximo < len(account.inventario) or not payload.user_cuenta.strip():
+        raise HTTPException(status_code=422, detail="La capacidad no puede ser menor al inventario actual")
+    account.user_cuenta = payload.user_cuenta.strip()
+    account.espacio_maximo = payload.espacio_maximo
+    try:
+        db.commit()
+    except Exception as error:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Ese nombre de cuenta ya existe") from error
+    db.refresh(account)
+    return account_response(account)
+
+
+@app.delete("/api/cuentas/{account_id}")
+def delete_account(account_id: int, user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
+    account = db.query(Cuenta).filter(Cuenta.id_cuenta == account_id,
+                                      Cuenta.id_usuario == user.id_usuario).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="Cuenta no encontrada")
+    for item in list(account.inventario):
+        db.delete(item)
+    db.delete(account)
+    db.commit()
+    return {"ok": True, "id_cuenta": account_id}
+
+
 @app.post("/api/cuentas/{account_id}/inventario")
 def add_brainrot(account_id: int, payload: BrainrotPayload,
                  user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):

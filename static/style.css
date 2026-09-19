@@ -241,6 +241,12 @@ main {
   align-items: center;
 }
 
+.cuenta-header-actions {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+
 .scroll-horizontal {
   display: flex;
   gap: 0.8rem;
@@ -468,8 +474,12 @@ main {
     gap: .7rem;
   }
 
-  .cuenta-header .btn-secondary {
+  .cuenta-header-actions {
     width: 100%;
+  }
+
+  .cuenta-header-actions .btn-secondary {
+    flex: 1;
   }
 
   .modal-contenido {

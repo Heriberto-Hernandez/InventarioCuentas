@@ -33,6 +33,7 @@ const btnCerrarAgregarCuenta = document.getElementById("btnCerrarAgregarCuenta")
 const btnCancelarAgregarCuenta = document.getElementById("btnCancelarAgregarCuenta");
 const btnGuardarCuenta = document.getElementById("btnGuardarCuenta");
 const errorAgregarCuenta = document.getElementById("errorAgregarCuenta");
+const tituloFormularioCuenta = document.querySelector("#modalAgregarCuenta h2");
 const btnAgregarBrainrot = document.getElementById("btnAgregarBrainrot");
 const modalAgregarBrainrot = document.getElementById("modalAgregarBrainrot");
 const formAgregarBrainrot = document.getElementById("formAgregarBrainrot");
@@ -43,6 +44,7 @@ const errorAgregarBrainrot = document.getElementById("errorAgregarBrainrot");
 const tituloFormularioBrainrot = document.getElementById("tituloFormularioBrainrot");
 let cuentaSeleccionada = null;
 let brainrotEditando = null;
+let cuentaEditando = null;
 
 function estiloRareza(nombre) {
   const rareza = rarezas.find(item => item.nombre === nombre);
@@ -120,7 +122,11 @@ function renderizarCuentas(lista = cuentas) {
           <h3>🎮 @${cuenta.user_cuenta}</h3>
           <span class="subtitulo">Espacio: ${cuenta.inventario.length} / ${cuenta.espacio_maximo} slots</span>
         </div>
-        <button class="btn-secondary" onclick="abrirModalCuadricula(${cuenta.id_cuenta})">Ver Cuadrícula</button>
+        <div class="cuenta-header-actions">
+          <button class="btn-secondary" onclick="abrirModalCuadricula(${cuenta.id_cuenta})">Ver Cuadrícula</button>
+          <button class="btn-icon" type="button" aria-label="Editar cuenta" title="Editar cuenta" onclick="editarCuenta(${cuenta.id_cuenta})">&#9998;</button>
+          <button class="btn-icon btn-icon-danger" type="button" aria-label="Eliminar cuenta" title="Eliminar cuenta" onclick="eliminarCuenta(${cuenta.id_cuenta})">&#128465;</button>
+        </div>
       </div>
       <div class="scroll-horizontal">
         ${cuenta.inventario.map(item => `
@@ -275,16 +281,48 @@ formAgregarBrainrot.addEventListener("submit", async (event) => {
 function cerrarModalAgregarCuenta() {
   modalAgregarCuenta.classList.remove("activo");
   formAgregarCuenta.reset();
+  cuentaEditando = null;
+  tituloFormularioCuenta.textContent = "Agregar cuenta";
   errorAgregarCuenta.textContent = "";
   btnGuardarCuenta.disabled = false;
   btnGuardarCuenta.textContent = "Guardar cuenta";
 }
 
 btnAgregarCuenta.addEventListener("click", () => {
+  cuentaEditando = null;
+  tituloFormularioCuenta.textContent = "Agregar cuenta";
   errorAgregarCuenta.textContent = "";
   modalAgregarCuenta.classList.add("activo");
   document.getElementById("nombreCuentaInput").focus();
 });
+
+window.editarCuenta = function(accountId) {
+  const cuenta = cuentas.find(item => item.id_cuenta === accountId);
+  if (!cuenta) return;
+  cuentaEditando = accountId;
+  tituloFormularioCuenta.textContent = "Editar cuenta";
+  document.getElementById("nombreCuentaInput").value = cuenta.user_cuenta;
+  document.getElementById("espacioCuentaInput").value = cuenta.espacio_maximo;
+  errorAgregarCuenta.textContent = "";
+  modalAgregarCuenta.classList.add("activo");
+  document.getElementById("nombreCuentaInput").focus();
+};
+
+window.eliminarCuenta = async function(accountId) {
+  const cuenta = cuentas.find(item => item.id_cuenta === accountId);
+  if (!cuenta || !confirm(`¿Eliminar la cuenta @${cuenta.user_cuenta} y todo su inventario?`)) return;
+  try {
+    const res = await fetch(`/api/cuentas/${accountId}`, { method: "DELETE", credentials: "same-origin" });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      alert(error.detail || `Error al eliminar (${res.status})`);
+      return;
+    }
+    await cargarDatosBD();
+  } catch (error) {
+    alert("No se pudo conectar con el servidor");
+  }
+};
 btnCerrarAgregarCuenta.addEventListener("click", cerrarModalAgregarCuenta);
 btnCancelarAgregarCuenta.addEventListener("click", cerrarModalAgregarCuenta);
 modalAgregarCuenta.addEventListener("click", (event) => {
@@ -300,8 +338,8 @@ formAgregarCuenta.addEventListener("submit", async (event) => {
   btnGuardarCuenta.disabled = true;
   btnGuardarCuenta.textContent = "Guardando...";
   try {
-    const res = await fetch("/api/cuentas", {
-      method: "POST",
+    const res = await fetch(cuentaEditando ? `/api/cuentas/${cuentaEditando}` : "/api/cuentas", {
+      method: cuentaEditando ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "same-origin",
       body: JSON.stringify({ user_cuenta: nombre, espacio_maximo: espacioMaximo })
