@@ -45,6 +45,17 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
+@app.middleware("http")
+async def normalize_vercel_api_path(request, call_next):
+    path = request.scope["path"]
+    api_prefixes = ("/auth", "/cuentas", "/inventario", "/rarezas", "/health")
+    if not path.startswith("/api/") and any(
+        path == prefix or path.startswith(prefix + "/") for prefix in api_prefixes
+    ):
+        request.scope["path"] = "/api" + path
+    return await call_next(request)
+
+
 @app.get("/")
 def read_root():
     return FileResponse(str(STATIC_DIR / "index.html"))
