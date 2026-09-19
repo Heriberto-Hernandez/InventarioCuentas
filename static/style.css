@@ -533,3 +533,27 @@ main {
 .btn-danger:hover {
   background: #b91c1c;
 }
+
+.btn-icon {
+  width: 30px;
+  height: 30px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #21262d;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.btn-icon:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.btn-icon-danger:hover {
+  border-color: #f85149;
+  color: #ff7b72;
+}

@@ -154,9 +154,9 @@ window.abrirModalCuadricula = function(idCuenta) {
       <span class="mutacion-label">Mutación: ${item.mutacion}</span>
       <span style="color: var(--verde-dinero); font-size: 0.85rem;">+$${item.dinero.toLocaleString()}/s</span>
       <div class="card-actions">
-        <button class="btn-secondary btn-small" type="button" onclick="editarBrainrot(${item.id_inventario})">Editar</button>
-        <button class="btn-secondary btn-small" type="button" onclick="duplicarBrainrot(${item.id_inventario})">Duplicar</button>
-        <button class="btn-danger btn-small" type="button" onclick="eliminarBrainrot(${item.id_inventario})">Eliminar</button>
+        <button class="btn-icon" type="button" aria-label="Editar brainrot" title="Editar" onclick="editarBrainrot(${item.id_inventario})">&#9998;</button>
+        <button class="btn-icon" type="button" aria-label="Duplicar brainrot" title="Duplicar" onclick="duplicarBrainrot(${item.id_inventario})">&#10697;</button>
+        <button class="btn-icon btn-icon-danger" type="button" aria-label="Eliminar brainrot" title="Eliminar" onclick="eliminarBrainrot(${item.id_inventario})">&#128465;</button>
       </div>
     </div>
   `).join("");
