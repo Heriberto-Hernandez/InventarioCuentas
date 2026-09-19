@@ -156,6 +156,7 @@ window.abrirModalCuadricula = function(idCuenta) {
       <div class="card-actions">
         <button class="btn-secondary btn-small" type="button" onclick="editarBrainrot(${item.id_inventario})">Editar</button>
         <button class="btn-secondary btn-small" type="button" onclick="duplicarBrainrot(${item.id_inventario})">Duplicar</button>
+        <button class="btn-danger btn-small" type="button" onclick="eliminarBrainrot(${item.id_inventario})">Eliminar</button>
       </div>
     </div>
   `).join("");
@@ -206,6 +207,24 @@ window.duplicarBrainrot = async function(inventoryId) {
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
       alert(error.detail || `Error al duplicar (${res.status})`);
+      return;
+    }
+    await cargarDatosBD();
+    abrirModalCuadricula(cuentaSeleccionada);
+  } catch (error) {
+    alert("No se pudo conectar con el servidor");
+  }
+};
+
+window.eliminarBrainrot = async function(inventoryId) {
+  if (!confirm("¿Eliminar este brainrot del inventario?")) return;
+  try {
+    const res = await fetch(`/api/inventario/${inventoryId}`, {
+      method: "DELETE", credentials: "same-origin"
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      alert(error.detail || `Error al eliminar (${res.status})`);
       return;
     }
     await cargarDatosBD();

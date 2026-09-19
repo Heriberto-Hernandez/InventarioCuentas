@@ -274,3 +274,14 @@ def duplicate_brainrot(inventory_id: int, user: Usuario = Depends(get_current_us
     db.commit()
     db.refresh(item.cuenta)
     return account_response(item.cuenta)
+
+
+@app.delete("/api/inventario/{inventory_id}")
+def delete_brainrot(inventory_id: int, user: Usuario = Depends(get_current_user),
+                    db: Session = Depends(get_db)):
+    item = get_inventory_item(inventory_id, user, db)
+    account = item.cuenta
+    db.delete(item)
+    db.commit()
+    db.refresh(account)
+    return account_response(account)
