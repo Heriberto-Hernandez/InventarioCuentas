@@ -1,6 +1,15 @@
 let cuentas = [];
 let usuarioActual = null;
 let rarezas = [];
+const rarezasPorDefecto = [
+  ["Normal", "#30363d", "#f0f6fc"], ["Oro", "#8a6500", "#ffe08a"],
+  ["Diamante", "#075985", "#a5f3fc"], ["Arco iris", "#7c3aed", "#f5d0fe"],
+  ["Cristal", "#155e75", "#cffafe"], ["Fantasma", "#475569", "#e2e8f0"],
+  ["Cíber", "#115e59", "#99f6e4"], ["Divino", "#9a3412", "#fed7aa"],
+  ["Maldito", "#7f1d1d", "#fecaca"], ["Radioactivo", "#3f6212", "#d9f99d"],
+  ["Yin y Yang", "#f8fafc", "#111827"], ["Galaxia", "#312e81", "#ddd6fe"],
+  ["Lava", "#991b1b", "#fed7aa"], ["Caramelos", "#9d174d", "#fbcfe8"]
+].map(([nombre, color, texto]) => ({ nombre, color, texto }));
 
 // ELEMENTOS DOM
 const contenedorCuentas = document.getElementById("contenedorCuentas");
@@ -42,9 +51,22 @@ function estiloRareza(nombre) {
 }
 
 async function cargarRarezas() {
-  const res = await fetch("/api/rarezas");
-  if (!res.ok) throw new Error("No se pudieron cargar las rarezas");
-  rarezas = await res.json();
+  try {
+    const rutas = ["/api/rarezas", "/rarezas"];
+    for (const ruta of rutas) {
+      const res = await fetch(ruta);
+      if (res.ok) {
+        const datos = await res.json();
+        if (Array.isArray(datos) && datos.length > 0) {
+          rarezas = datos;
+          break;
+        }
+      }
+    }
+  } catch (error) {
+    console.warn("No se pudo cargar el catálogo remoto de rarezas", error);
+  }
+  if (rarezas.length === 0) rarezas = rarezasPorDefecto;
   const selector = document.getElementById("rarezaBrainrotInput");
   selector.innerHTML = rarezas.map(rareza =>
     `<option value="${rareza.nombre}">${rareza.nombre}</option>`
