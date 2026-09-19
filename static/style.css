@@ -417,3 +417,105 @@ main {
 .btn-small {
   padding: .45rem .7rem;
 }
+
+@media (max-width: 680px) {
+  header {
+    flex-wrap: wrap;
+    gap: .7rem;
+    padding: .7rem 1rem;
+  }
+
+  .buscador-container {
+    order: 3;
+    flex-basis: 100%;
+    margin: 0;
+    max-width: none;
+  }
+
+  .usuario-perfil {
+    margin-left: auto;
+    gap: 6px;
+    font-size: .78rem;
+  }
+
+  .btn-logout {
+    padding: .4rem .5rem;
+    font-size: .7rem;
+  }
+
+  main {
+    padding: 1.25rem 1rem;
+    gap: 1.25rem;
+  }
+
+  .header-secciones {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .9rem;
+  }
+
+  .header-secciones .btn-primary {
+    width: 100%;
+  }
+
+  .cuenta-bloque {
+    padding: 1rem;
+  }
+
+  .cuenta-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .7rem;
+  }
+
+  .cuenta-header .btn-secondary {
+    width: 100%;
+  }
+
+  .modal-contenido {
+    width: calc(100% - 1.5rem);
+    max-height: calc(100vh - 1.5rem);
+    height: auto;
+    padding: 1rem;
+  }
+
+  #modalCuadricula .modal-contenido {
+    height: calc(100vh - 1.5rem);
+  }
+
+  .modal-top {
+    gap: .5rem;
+  }
+
+  .modal-actions {
+    gap: .35rem;
+  }
+
+  .grid-brainrots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .65rem;
+  }
+
+  .card-grid {
+    padding: .7rem .45rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .card-actions .btn-small {
+    width: 100%;
+  }
+
+  .login-vista {
+    padding: 1rem;
+  }
+
+  .login-panel {
+    padding: 2rem 1.25rem;
+  }
+}

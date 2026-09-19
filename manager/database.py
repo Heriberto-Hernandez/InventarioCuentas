@@ -20,7 +20,7 @@ elif DATABASE_URL.startswith("postgresql://"):
 if not DATABASE_URL.startswith("postgresql+psycopg2://"):
     raise RuntimeError("DATABASE_URL debe ser una URL PostgreSQL de Supabase")
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"}, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
