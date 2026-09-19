@@ -13,10 +13,10 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session, joinedload
 
 try:
-    from .database import Base, engine, get_db
+    from .database import Base, engine, get_db, DATABASE_URL
     from .models import CatalogoBrainrot, Cuenta, InventarioCuenta, Usuario
 except ImportError:
-    from database import Base, engine, get_db
+    from database import Base, engine, get_db, DATABASE_URL
     from models import CatalogoBrainrot, Cuenta, InventarioCuenta, Usuario
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -53,6 +53,11 @@ def read_root():
 @app.get("/api/rarezas")
 def list_rarezas():
     return RAREZAS
+
+
+@app.get("/api/health")
+def health():
+    return {"ok": True, "database_configured": bool(DATABASE_URL)}
 
 
 class AuthPayload(BaseModel):
