@@ -42,7 +42,6 @@ RAREZAS = [
 ]
 
 app = FastAPI()
-Base.metadata.create_all(bind=engine)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
